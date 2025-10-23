@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Download, Copy, Send, Code2, FileJson, Database } from 'lucide-react';
+import { faker } from '@faker-js/faker';
 
 // Define proper interfaces for our data structures
 interface GeneratedDataItem {
@@ -97,160 +98,112 @@ const FakeDataGenerator = () => {
         const lowerField = field.toLowerCase();
         
         if (lowerField.includes('email') || lowerField === 'mail') {
-          (item as any)[field] = generateEmail();
+          (item as any)[field] = faker.internet.email();
         }
         else if (lowerField.includes('password') || lowerField === 'pwd' || lowerField === 'pass') {
-          (item as any)[field] = generatePassword();
+          (item as any)[field] = faker.internet.password({ length: 12 });
         }
         else if (lowerField.includes('first') || lowerField === 'firstname' || lowerField === 'fname') {
-          (item as any)[field] = generateFirstName();
+          (item as any)[field] = faker.person.firstName();
         }
         else if (lowerField.includes('last') || lowerField === 'lastname' || lowerField === 'lname' || lowerField === 'surname') {
-          (item as any)[field] = generateLastName();
+          (item as any)[field] = faker.person.lastName();
         }
         else if (lowerField === 'name' || lowerField === 'fullname') {
-          (item as any)[field] = `${generateFirstName()} ${generateLastName()}`;
+          (item as any)[field] = faker.person.fullName();
         }
         else if (lowerField.includes('user') && !lowerField.includes('id')) {
-          (item as any)[field] = generateUsername();
+          (item as any)[field] = faker.internet.username();
         }
         else if (lowerField.includes('age')) {
-          (item as any)[field] = Math.floor(Math.random() * 50) + 18;
+          (item as any)[field] = faker.number.int({ min: 18, max: 68 });
         }
         else if (lowerField.includes('phone') || lowerField.includes('mobile') || lowerField.includes('tel')) {
-          (item as any)[field] = generatePhone();
+          (item as any)[field] = faker.phone.number();
         }
         else if (lowerField.includes('address') || lowerField.includes('street')) {
-          (item as any)[field] = generateAddress();
+          (item as any)[field] = faker.location.streetAddress();
         }
         else if (lowerField.includes('city')) {
-          (item as any)[field] = generateCity();
+          (item as any)[field] = faker.location.city();
         }
         else if (lowerField.includes('state') || lowerField.includes('province')) {
-          (item as any)[field] = generateState();
+          (item as any)[field] = faker.location.state({ abbreviated: true });
         }
         else if (lowerField.includes('country') || lowerField.includes('nation')) {
-          (item as any)[field] = generateCountry();
+          (item as any)[field] = faker.location.country();
         }
         else if (lowerField.includes('zip') || lowerField.includes('postal')) {
-          (item as any)[field] = generateZip();
+          (item as any)[field] = faker.location.zipCode();
         }
         else if (lowerField.includes('price') || lowerField.includes('cost') || lowerField.includes('amount') || lowerField.includes('total') || lowerField.includes('salary')) {
-          (item as any)[field] = (Math.random() * 1000 + 10).toFixed(2);
+          (item as any)[field] = faker.commerce.price({ min: 10, max: 1000, dec: 2 });
         }
         else if (lowerField.includes('currency')) {
-          (item as any)[field] = ['USD', 'EUR', 'GBP', 'JPY'][Math.floor(Math.random() * 4)];
+          (item as any)[field] = faker.finance.currencyCode();
         }
         else if (lowerField.includes('date') || lowerField.includes('time') || lowerField.includes('created') || lowerField.includes('updated')) {
-          (item as any)[field] = new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString();
+          (item as any)[field] = faker.date.past({ years: 1 }).toISOString();
         }
         else if (lowerField.includes('status')) {
-          (item as any)[field] = ['active', 'inactive', 'pending', 'completed', 'cancelled'][Math.floor(Math.random() * 5)];
+          (item as any)[field] = faker.helpers.arrayElement(['active', 'inactive', 'pending', 'completed', 'cancelled']);
         }
         else if (lowerField.includes('is') || lowerField.includes('has') || lowerField.includes('verified') || lowerField.includes('active')) {
-          (item as any)[field] = Math.random() > 0.5;
+          (item as any)[field] = faker.datatype.boolean();
         }
         else if (lowerField.includes('category') || lowerField.includes('type') || lowerField.includes('department')) {
-          (item as any)[field] = ['Type A', 'Type B', 'Type C', 'Type D'][Math.floor(Math.random() * 4)];
+          (item as any)[field] = faker.commerce.department();
         }
         else if (lowerField.includes('stock') || lowerField.includes('quantity') || lowerField.includes('qty')) {
-          (item as any)[field] = Math.floor(Math.random() * 1000);
+          (item as any)[field] = faker.number.int({ min: 0, max: 1000 });
         }
         else if (lowerField.includes('rating') || lowerField.includes('score')) {
-          (item as any)[field] = (Math.random() * 5).toFixed(1);
+          (item as any)[field] = faker.number.float({ min: 0, max: 5, fractionDigits: 1 });
         }
         else if (lowerField.includes('view') || lowerField.includes('like') || lowerField.includes('count') || lowerField.includes('follower')) {
-          (item as any)[field] = Math.floor(Math.random() * 10000);
+          (item as any)[field] = faker.number.int({ min: 0, max: 10000 });
         }
         else if (lowerField.includes('description') || lowerField.includes('content') || lowerField.includes('bio') || lowerField.includes('about')) {
-          (item as any)[field] = generateText();
+          (item as any)[field] = faker.lorem.paragraph();
         }
         else if (lowerField.includes('title') || lowerField.includes('heading')) {
-          (item as any)[field] = generateTitle();
+          (item as any)[field] = faker.lorem.sentence({ min: 3, max: 6 });
         }
         else if (lowerField.includes('sku') || lowerField.includes('code')) {
-          (item as any)[field] = `SKU${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
+          (item as any)[field] = faker.string.alphanumeric({ length: 10, casing: 'upper' });
         }
         else if (lowerField.includes('id') && lowerField !== 'id') {
-          (item as any)[field] = Math.floor(Math.random() * 9999) + 1;
+          (item as any)[field] = faker.number.int({ min: 1, max: 9999 });
         }
         else if (lowerField.includes('url') || lowerField.includes('website') || lowerField.includes('link')) {
-          (item as any)[field] = `https://example-${i + 1}.com`;
+          (item as any)[field] = faker.internet.url();
         }
         else if (lowerField.includes('image') || lowerField.includes('photo') || lowerField.includes('avatar') || lowerField.includes('picture')) {
-          (item as any)[field] = `https://via.placeholder.com/150?text=Image${i + 1}`;
+          (item as any)[field] = faker.image.avatar();
         }
         else if (lowerField.includes('company') || lowerField.includes('organization')) {
-          (item as any)[field] = generateCompany();
+          (item as any)[field] = faker.company.name();
         }
-        else if (lowerField.includes('job') || lowerField.includes('position') || lowerField.includes('role') || lowerField.includes('title')) {
-          (item as any)[field] = generateJobTitle();
+        else if (lowerField.includes('job') || lowerField.includes('position') || lowerField.includes('role')) {
+          (item as any)[field] = faker.person.jobTitle();
         }
         else if (lowerField.includes('gender') || lowerField.includes('sex')) {
-          (item as any)[field] = ['Male', 'Female', 'Other'][Math.floor(Math.random() * 3)];
+          (item as any)[field] = faker.person.sex();
+        }
+        else if (lowerField.includes('color') || lowerField.includes('colour')) {
+          (item as any)[field] = faker.color.human();
+        }
+        else if (lowerField.includes('product')) {
+          (item as any)[field] = faker.commerce.productName();
         }
         else {
-          (item as any)[field] = `${field}_value_${i + 1}`;
+          (item as any)[field] = faker.word.sample();
         }
       });
       
       return item;
     });
   };
-
-  const firstNames: string[] = ['James', 'Emma', 'Michael', 'Olivia', 'William', 'Sophia', 'David', 'Ava', 'John', 'Isabella', 'Robert', 'Mia', 'Daniel', 'Charlotte', 'Joseph', 'Amelia'];
-  const lastNames: string[] = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Wilson', 'Anderson', 'Taylor', 'Thomas', 'Moore'];
-  
-  const generateFirstName = (): string => firstNames[Math.floor(Math.random() * firstNames.length)];
-  const generateLastName = (): string => lastNames[Math.floor(Math.random() * lastNames.length)];
-  
-  const generateEmail = (): string => {
-    const first = generateFirstName().toLowerCase();
-    const last = generateLastName().toLowerCase();
-    const domains: string[] = ['gmail.com', 'yahoo.com', 'outlook.com', 'example.com', 'mail.com'];
-    return `${first}.${last}${Math.floor(Math.random() * 999)}@${domains[Math.floor(Math.random() * domains.length)]}`;
-  };
-  
-  const generatePassword = (): string => {
-    const chars: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
-    return Array.from({ length: 12 }, (_: unknown): string => chars[Math.floor(Math.random() * chars.length)]).join('');
-  };
-  
-  const generateUsername = (): string => {
-    const first = generateFirstName().toLowerCase();
-    const num: number = Math.floor(Math.random() * 9999);
-    return `${first}${num}`;
-  };
-  
-  const generatePhone = (): string => `+1-${Math.floor(Math.random() * 900 + 100)}-${Math.floor(Math.random() * 900 + 100)}-${Math.floor(Math.random() * 9000 + 1000)}`;
-  
-  const generateAddress = (): string => {
-    const num: number = Math.floor(Math.random() * 9999) + 1;
-    const streets: string[] = ['Main St', 'Oak Ave', 'Maple Dr', 'Park Rd', 'Cedar Ln', 'Elm St', 'Washington Blvd', '1st Ave'];
-    return `${num} ${streets[Math.floor(Math.random() * streets.length)]}`;
-  };
-  
-  const cities: string[] = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'Austin'];
-  const generateCity = (): string => cities[Math.floor(Math.random() * cities.length)];
-  
-  const states: string[] = ['CA', 'NY', 'TX', 'FL', 'IL', 'PA', 'OH', 'GA', 'NC', 'MI'];
-  const generateState = (): string => states[Math.floor(Math.random() * states.length)];
-  
-  const countries: string[] = ['USA', 'Canada', 'UK', 'Australia', 'Germany', 'France', 'Spain', 'Italy', 'Japan', 'Brazil'];
-  const generateCountry = (): string => countries[Math.floor(Math.random() * countries.length)];
-  
-  const generateZip = (): string => String(Math.floor(Math.random() * 90000) + 10000);
-  
-  const generateText = (): string => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-  
-  const titles: string[] = ['Getting Started Guide', 'Best Practices', 'Complete Tutorial', 'Advanced Tips', 'Introduction to', 'Mastering the Art', 'Essential Guide'];
-  const generateTitle = (): string => `${titles[Math.floor(Math.random() * titles.length)]} ${Math.floor(Math.random() * 100)}`;
-  
-  const companies: string[] = ['Tech Corp', 'Global Solutions', 'Digital Systems', 'Smart Industries', 'Innovation Labs', 'Future Enterprises'];
-  const generateCompany = (): string => companies[Math.floor(Math.random() * companies.length)];
-  
-  const jobs: string[] = ['Software Engineer', 'Product Manager', 'Data Analyst', 'Marketing Specialist', 'Sales Representative', 'HR Manager', 'Designer'];
-  const generateJobTitle = (): string => jobs[Math.floor(Math.random() * jobs.length)];
 
   const convertToCSV: CSVConverterFunction = (data: GeneratedDataItem[]): string => {
     if (!data || data.length === 0) return '';
@@ -311,7 +264,7 @@ const FakeDataGenerator = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Mock Data Generator</h1>
-          <p className="text-gray-600">Describe what you need and get instant test data in JSON, CSV, or SQL format</p>
+          <p className="text-gray-600">Describe what you need and get instant realistic test data powered by Faker.js</p>
         </div>
 
         {/* Main Input Card */}
@@ -445,11 +398,11 @@ const FakeDataGenerator = () => {
 
         {/* Info Section */}
         <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <h3 className="text-sm font-semibold text-blue-900 mb-3">Supported Field Types</h3>
+          <h3 className="text-sm font-semibold text-blue-900 mb-3">Supported Field Types (Powered by Faker.js)</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-blue-800">
             <div>
               <div className="font-medium mb-1">Identity</div>
-              <div className="text-xs text-blue-700">email, password, username, firstname, lastname</div>
+              <div className="text-xs text-blue-700">email, password, username, firstname, lastname, gender</div>
             </div>
             <div>
               <div className="font-medium mb-1">Contact</div>
@@ -461,7 +414,7 @@ const FakeDataGenerator = () => {
             </div>
             <div>
               <div className="font-medium mb-1">Content</div>
-              <div className="text-xs text-blue-700">title, description, content, bio, status</div>
+              <div className="text-xs text-blue-700">title, description, content, bio, status, color, product</div>
             </div>
           </div>
         </div>
