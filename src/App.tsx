@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
-import { Download, Copy, Send, Loader2, Sparkles } from 'lucide-react';
+import { Download, Copy, Send, Code2, FileJson, Database } from 'lucide-react';
 
 // Define proper interfaces for our data structures
 interface GeneratedDataItem {
@@ -41,19 +41,16 @@ const FakeDataGenerator = () => {
       .replace(/\s+(with|having|including|contains?)\s+/i, ' ')
       .trim();
 
-    // Split by common delimiters
     const fields = cleaned.split(/[\s,]+(?:and\s+)?/)
       .filter((f: string) => f && f.length > 1)
       .filter((f: string) => !['with', 'and', 'or', 'the', 'a', 'an'].includes(f));
 
-    // Remove the first word if it's a data type descriptor
     const dataTypeWords = ['user', 'users', 'product', 'products', 'order', 'orders', 'employee', 'employees', 'post', 'posts', 'item', 'items', 'record', 'records'];
     if (fields.length > 0 && dataTypeWords.includes(fields[0])) {
       fields.shift();
     }
 
     return fields.map((f: string): string => {
-      // Convert to camelCase or keep as is
       if (f.includes('_')) return f;
       return f.replace(/\s+/g, '');
     }).filter((f: string): boolean => f.length > 0);
@@ -99,131 +96,99 @@ const FakeDataGenerator = () => {
       fields.forEach((field: string): void => {
         const lowerField = field.toLowerCase();
         
-        // Email
         if (lowerField.includes('email') || lowerField === 'mail') {
           (item as any)[field] = generateEmail();
         }
-        // Password
         else if (lowerField.includes('password') || lowerField === 'pwd' || lowerField === 'pass') {
           (item as any)[field] = generatePassword();
         }
-        // First name
         else if (lowerField.includes('first') || lowerField === 'firstname' || lowerField === 'fname') {
           (item as any)[field] = generateFirstName();
         }
-        // Last name
         else if (lowerField.includes('last') || lowerField === 'lastname' || lowerField === 'lname' || lowerField === 'surname') {
           (item as any)[field] = generateLastName();
         }
-        // Full name
         else if (lowerField === 'name' || lowerField === 'fullname') {
           (item as any)[field] = `${generateFirstName()} ${generateLastName()}`;
         }
-        // Username
         else if (lowerField.includes('user') && !lowerField.includes('id')) {
           (item as any)[field] = generateUsername();
         }
-        // Age
         else if (lowerField.includes('age')) {
           (item as any)[field] = Math.floor(Math.random() * 50) + 18;
         }
-        // Phone
         else if (lowerField.includes('phone') || lowerField.includes('mobile') || lowerField.includes('tel')) {
           (item as any)[field] = generatePhone();
         }
-        // Address
         else if (lowerField.includes('address') || lowerField.includes('street')) {
           (item as any)[field] = generateAddress();
         }
-        // City
         else if (lowerField.includes('city')) {
           (item as any)[field] = generateCity();
         }
-        // State
         else if (lowerField.includes('state') || lowerField.includes('province')) {
           (item as any)[field] = generateState();
         }
-        // Country
         else if (lowerField.includes('country') || lowerField.includes('nation')) {
           (item as any)[field] = generateCountry();
         }
-        // Zip/Postal
         else if (lowerField.includes('zip') || lowerField.includes('postal')) {
           (item as any)[field] = generateZip();
         }
-        // Price/Amount/Cost
         else if (lowerField.includes('price') || lowerField.includes('cost') || lowerField.includes('amount') || lowerField.includes('total') || lowerField.includes('salary')) {
           (item as any)[field] = (Math.random() * 1000 + 10).toFixed(2);
         }
-        // Currency
         else if (lowerField.includes('currency')) {
           (item as any)[field] = ['USD', 'EUR', 'GBP', 'JPY'][Math.floor(Math.random() * 4)];
         }
-        // Date/Time
         else if (lowerField.includes('date') || lowerField.includes('time') || lowerField.includes('created') || lowerField.includes('updated')) {
           (item as any)[field] = new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString();
         }
-        // Status
         else if (lowerField.includes('status')) {
           (item as any)[field] = ['active', 'inactive', 'pending', 'completed', 'cancelled'][Math.floor(Math.random() * 5)];
         }
-        // Boolean fields
         else if (lowerField.includes('is') || lowerField.includes('has') || lowerField.includes('verified') || lowerField.includes('active')) {
           (item as any)[field] = Math.random() > 0.5;
         }
-        // Category/Type
         else if (lowerField.includes('category') || lowerField.includes('type') || lowerField.includes('department')) {
           (item as any)[field] = ['Type A', 'Type B', 'Type C', 'Type D'][Math.floor(Math.random() * 4)];
         }
-        // Stock/Quantity
         else if (lowerField.includes('stock') || lowerField.includes('quantity') || lowerField.includes('qty')) {
           (item as any)[field] = Math.floor(Math.random() * 1000);
         }
-        // Rating
         else if (lowerField.includes('rating') || lowerField.includes('score')) {
           (item as any)[field] = (Math.random() * 5).toFixed(1);
         }
-        // Views/Likes/Count
         else if (lowerField.includes('view') || lowerField.includes('like') || lowerField.includes('count') || lowerField.includes('follower')) {
           (item as any)[field] = Math.floor(Math.random() * 10000);
         }
-        // Description/Content/Bio
         else if (lowerField.includes('description') || lowerField.includes('content') || lowerField.includes('bio') || lowerField.includes('about')) {
           (item as any)[field] = generateText();
         }
-        // Title
         else if (lowerField.includes('title') || lowerField.includes('heading')) {
           (item as any)[field] = generateTitle();
         }
-        // SKU/Code
         else if (lowerField.includes('sku') || lowerField.includes('code')) {
           (item as any)[field] = `SKU${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
         }
-        // ID fields (except the main id)
         else if (lowerField.includes('id') && lowerField !== 'id') {
           (item as any)[field] = Math.floor(Math.random() * 9999) + 1;
         }
-        // URL/Website
         else if (lowerField.includes('url') || lowerField.includes('website') || lowerField.includes('link')) {
           (item as any)[field] = `https://example-${i + 1}.com`;
         }
-        // Image
         else if (lowerField.includes('image') || lowerField.includes('photo') || lowerField.includes('avatar') || lowerField.includes('picture')) {
           (item as any)[field] = `https://via.placeholder.com/150?text=Image${i + 1}`;
         }
-        // Company
         else if (lowerField.includes('company') || lowerField.includes('organization')) {
           (item as any)[field] = generateCompany();
         }
-        // Job/Position/Role
         else if (lowerField.includes('job') || lowerField.includes('position') || lowerField.includes('role') || lowerField.includes('title')) {
           (item as any)[field] = generateJobTitle();
         }
-        // Gender
         else if (lowerField.includes('gender') || lowerField.includes('sex')) {
           (item as any)[field] = ['Male', 'Female', 'Other'][Math.floor(Math.random() * 3)];
         }
-        // Default: string value
         else {
           (item as any)[field] = `${field}_value_${i + 1}`;
         }
@@ -233,7 +198,6 @@ const FakeDataGenerator = () => {
     });
   };
 
-  // Generator functions with proper return types
   const firstNames: string[] = ['James', 'Emma', 'Michael', 'Olivia', 'William', 'Sophia', 'David', 'Ava', 'John', 'Isabella', 'Robert', 'Mia', 'Daniel', 'Charlotte', 'Joseph', 'Amelia'];
   const lastNames: string[] = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Wilson', 'Anderson', 'Taylor', 'Thomas', 'Moore'];
   
@@ -335,116 +299,135 @@ const FakeDataGenerator = () => {
     URL.revokeObjectURL(url);
   };
 
+  const formatIcons = {
+    json: FileJson,
+    csv: Database,
+    sql: Code2
+  };
+
   return (
-    <div className="min-h-screen bg-linear-to-br from-violet-50 via-white to-indigo-50 p-6">
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <Sparkles className="text-violet-600" size={32} />
-            <h1 className="text-4xl font-bold bg-linear-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
-              AI Data Generator
-            </h1>
-          </div>
-          <p className="text-gray-600 text-lg">Describe the fields you need, and get instant mock data</p>
-          <p className="text-sm text-gray-500 mt-1">Just type: "user with email password firstname lastname"</p>
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Mock Data Generator</h1>
+          <p className="text-gray-600">Describe what you need and get instant test data in JSON, CSV, or SQL format</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-6 border border-gray-100">
-          <label className="block text-sm font-semibold text-gray-700 mb-3">
-            What fields do you need? ✨
-          </label>
-          
-          <div className="flex gap-3 mb-4">
-            <input
-              type="text"
-              value={userPrompt}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>): void => setUserPrompt(e.target.value)}
-              onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>): void => { if (e.key === 'Enter') generateDataFromPrompt(); }}
-              placeholder="e.g., user with email password firstname lastname"
-              className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-violet-500 focus:outline-none text-gray-700"
-            />
-            <button
-              onClick={generateDataFromPrompt}
-              disabled={!userPrompt || isGenerating}
-              className="bg-linear-to-r from-violet-600 to-indigo-600 text-white px-6 py-3 rounded-xl hover:from-violet-700 hover:to-indigo-700 transition-all flex items-center gap-2 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isGenerating ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Generating...
-                </>
-              ) : (
-                <>
-                  <Send size={18} />
-                  Generate
-                </>
-              )}
-            </button>
-          </div>
+        {/* Main Input Card */}
+        <div className="bg-white border border-gray-200 rounded-lg shadow-sm mb-6">
+          <div className="p-6">
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Describe your data structure
+              </label>
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  value={userPrompt}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>): void => setUserPrompt(e.target.value)}
+                  onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>): void => { if (e.key === 'Enter') generateDataFromPrompt(); }}
+                  placeholder="user with email password firstname lastname"
+                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                />
+                <button
+                  onClick={generateDataFromPrompt}
+                  disabled={!userPrompt || isGenerating}
+                  className="px-6 py-2.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2 font-medium"
+                >
+                  {isGenerating ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Generating
+                    </>
+                  ) : (
+                    <>
+                      <Send size={18} />
+                      Generate
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
 
-          <div className="flex flex-wrap gap-2 mb-4">
-            {examplePrompts.slice(0, 3).map((prompt: ExamplePrompt, i: number) => (
-              <button
-                key={i}
-                onClick={(): void => setUserPrompt(prompt.text)}
-                className="text-xs px-3 py-1.5 bg-violet-50 text-violet-700 rounded-full hover:bg-violet-100 transition-colors border border-violet-200"
-              >
-                {prompt.text}
-              </button>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Format</label>
-              <div className="flex gap-2">
-                {['json', 'csv', 'sql'].map((fmt: string) => (
+            {/* Example Prompts */}
+            <div className="mb-5">
+              <div className="text-xs text-gray-500 mb-2">Try these:</div>
+              <div className="flex flex-wrap gap-2">
+                {examplePrompts.slice(0, 3).map((prompt: ExamplePrompt, i: number) => (
                   <button
-                    key={fmt}
-                    onClick={(): void => setFormat(fmt)}
-                    className={`flex-1 px-4 py-2 rounded-lg border-2 transition-all font-medium uppercase text-sm ${
-                      format === fmt
-                        ? 'border-violet-600 bg-violet-50 text-violet-700'
-                        : 'border-gray-200 hover:border-gray-300 text-gray-600'
-                    }`}
+                    key={i}
+                    onClick={(): void => setUserPrompt(prompt.text)}
+                    className="text-xs px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
                   >
-                    {fmt}
+                    {prompt.text}
                   </button>
                 ))}
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Records: {count}
-              </label>
-              <input
-                type="range"
-                min="1"
-                max="100"
-                value={count}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => setCount(parseInt(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-violet-600"
-              />
+            {/* Format and Count Controls */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Output Format</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(['json', 'csv', 'sql'] as const).map((fmt: string) => {
+                    const Icon = formatIcons[fmt as keyof typeof formatIcons];
+                    return (
+                      <button
+                        key={fmt}
+                        onClick={(): void => setFormat(fmt)}
+                        className={`px-3 py-2 rounded-md border transition-colors flex items-center justify-center gap-2 ${
+                          format === fmt
+                            ? 'border-blue-600 bg-blue-50 text-blue-700'
+                            : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                        }`}
+                      >
+                        <Icon size={16} />
+                        <span className="text-sm font-medium uppercase">{fmt}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Number of records: <span className="font-semibold">{count}</span>
+                </label>
+                <input
+                  type="range"
+                  min="1"
+                  max="100"
+                  value={count}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>): void => setCount(parseInt(e.target.value))}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                />
+                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                  <span>1</span>
+                  <span>100</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
+        {/* Generated Data Output */}
         {generatedData && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Generated Data</h3>
+          <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">Generated Data</h2>
               <div className="flex gap-2">
                 <button
                   onClick={copyToClipboard}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-sm font-medium"
+                  className="px-3 py-1.5 text-sm border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2"
                 >
                   <Copy size={16} />
                   {copied ? 'Copied!' : 'Copy'}
                 </button>
                 <button
                   onClick={downloadFile}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-sm font-medium"
+                  className="px-3 py-1.5 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors flex items-center gap-2"
                 >
                   <Download size={16} />
                   Download
@@ -452,27 +435,34 @@ const FakeDataGenerator = () => {
               </div>
             </div>
 
-            <div className="bg-gray-900 rounded-xl p-4 overflow-auto max-h-96">
-              <pre className="text-green-400 text-sm font-mono">{generatedData}</pre>
+            <div className="p-6">
+              <div className="bg-gray-900 rounded-md p-4 overflow-auto max-h-96">
+                <pre className="text-green-400 text-sm font-mono">{generatedData}</pre>
+              </div>
             </div>
           </div>
         )}
 
-        <div className="mt-6 bg-linear-to-br from-violet-50 to-indigo-50 rounded-2xl p-6 border border-violet-100">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">💡 Supported Fields</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm text-gray-700">
-            <div>• email, password</div>
-            <div>• firstname, lastname</div>
-            <div>• username, name</div>
-            <div>• age, phone</div>
-            <div>• address, city, country</div>
-            <div>• price, amount, salary</div>
-            <div>• date, timestamp</div>
-            <div>• status, category</div>
-            <div>• title, description</div>
-            <div>• stock, quantity</div>
-            <div>• rating, views, likes</div>
-            <div>• company, position</div>
+        {/* Info Section */}
+        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h3 className="text-sm font-semibold text-blue-900 mb-3">Supported Field Types</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-blue-800">
+            <div>
+              <div className="font-medium mb-1">Identity</div>
+              <div className="text-xs text-blue-700">email, password, username, firstname, lastname</div>
+            </div>
+            <div>
+              <div className="font-medium mb-1">Contact</div>
+              <div className="text-xs text-blue-700">phone, address, city, state, country, zip</div>
+            </div>
+            <div>
+              <div className="font-medium mb-1">Financial</div>
+              <div className="text-xs text-blue-700">price, amount, salary, currency, total</div>
+            </div>
+            <div>
+              <div className="font-medium mb-1">Content</div>
+              <div className="text-xs text-blue-700">title, description, content, bio, status</div>
+            </div>
           </div>
         </div>
       </div>
