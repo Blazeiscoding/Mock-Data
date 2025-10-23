@@ -279,7 +279,7 @@ const FakeDataGenerator = () => {
                   type="text"
                   value={userPrompt}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>): void => setUserPrompt(e.target.value)}
-                  onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>): void => { if (e.key === 'Enter') generateDataFromPrompt(); }}
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => { if (e.key === 'Enter') generateDataFromPrompt(); }}
                   placeholder="user with email password firstname lastname"
                   className="flex-1 px-4 py-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                 />
